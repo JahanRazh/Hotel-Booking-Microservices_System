@@ -20,25 +20,25 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
-    @Operation(summary = "Create customer", description = "Register a new customer")
+    @Operation(summary = "Create customer", description = "[ADMIN/USER] Register a new customer")
     public ResponseEntity<CustomerDto.Response> createCustomer(@Valid @RequestBody CustomerDto.CreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(request));
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get customer by ID")
+    @Operation(summary = "Get customer by ID", description = "[ADMIN/USER]")
     public ResponseEntity<CustomerDto.Response> getCustomer(@PathVariable Long id) {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
     @GetMapping
-    @Operation(summary = "Get all customers")
+    @Operation(summary = "Get all customers", description = "[ADMIN ONLY]")
     public ResponseEntity<List<CustomerDto.Response>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update customer")
+    @Operation(summary = "Update customer", description = "[ADMIN/USER] Update existing customer details")
     public ResponseEntity<CustomerDto.Response> updateCustomer(
             @PathVariable Long id,
             @RequestBody CustomerDto.UpdateRequest request) {
@@ -46,14 +46,14 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete customer")
+    @Operation(summary = "Delete customer", description = "[ADMIN ONLY] Permanently delete a customer")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/email/{email}")
-    @Operation(summary = "Get customer by email")
+    @Operation(summary = "Get customer by email", description = "[ADMIN/USER]")
     public ResponseEntity<CustomerDto.Response> getCustomerByEmail(@PathVariable String email) {
         return ResponseEntity.ok(customerService.getCustomerByEmail(email));
     }

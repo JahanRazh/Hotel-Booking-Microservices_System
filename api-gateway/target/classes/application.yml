@@ -100,17 +100,7 @@ jwt:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-    urls:
-      - name: Auth Service
-        url: /auth-service/v3/api-docs
-      - name: Customer Service
-        url: /customer-service/v3/api-docs
-      - name: Room Service
-        url: /room-service/v3/api-docs
-      - name: Booking Service
-        url: /booking-service/v3/api-docs
-      - name: Payment Service
-        url: /payment-service/v3/api-docs
+    url: /v3/api-docs/aggregated
   api-docs:
     enabled: true
 

@@ -22,6 +22,7 @@ public class RouteValidator {
             "/room-service/v3/api-docs",
             "/booking-service/v3/api-docs",
             "/payment-service/v3/api-docs",
+            "/v3/api-docs/aggregated",
             "/webjars/",
             "/fallback"
     );

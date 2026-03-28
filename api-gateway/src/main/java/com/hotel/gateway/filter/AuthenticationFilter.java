@@ -2,7 +2,6 @@ package com.hotel.gateway.filter;
 
 import com.hotel.gateway.config.JwtUtil;
 import com.hotel.gateway.config.RouteValidator;
-import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
@@ -14,16 +13,15 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
-@RequiredArgsConstructor
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
 
     private final RouteValidator routeValidator;
     private final JwtUtil jwtUtil;
 
-    public AuthenticationFilter() {
+    public AuthenticationFilter(RouteValidator routeValidator, JwtUtil jwtUtil) {
         super(Config.class);
-        this.routeValidator = null;
-        this.jwtUtil = null;
+        this.routeValidator = routeValidator;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -50,6 +48,11 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     String username = jwtUtil.extractUsername(token);
                     String role = jwtUtil.extractRole(token);
 
+                    // Role-Based Access Control
+                    if (role == null || !isAuthorized(request.getURI().getPath(), request.getMethod().name(), role)) {
+                        return onError(exchange, "Forbidden: Insufficient role permissions manually enforced", HttpStatus.FORBIDDEN);
+                    }
+
                     ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                             .header("X-Auth-User", username)
                             .header("X-Auth-Role", role)
@@ -64,6 +67,40 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
             return chain.filter(exchange);
         };
+    }
+
+    private boolean isAuthorized(String path, String method, String role) {
+        if ("ROLE_ADMIN".equals(role)) {
+            return true;
+        }
+        
+        if ("ROLE_USER".equals(role)) {
+            // Room Service
+            if (path.startsWith("/api/rooms")) {
+                return method.equals("GET"); // Users can only view rooms
+            }
+            
+            // Customer Service
+            if (path.startsWith("/api/customers")) {
+                if (method.equals("DELETE")) return false; // Users cannot delete customers
+                if (method.equals("GET") && (path.equals("/api/customers") || path.equals("/api/customers/"))) return false; // Users cannot get all customers
+                return true;
+            }
+            
+            // Booking Service
+            if (path.startsWith("/api/bookings")) {
+                if (method.equals("GET") && (path.equals("/api/bookings") || path.equals("/api/bookings/"))) return false; // Users cannot get all bookings
+                return true;
+            }
+            
+            // Payment Service
+            if (path.startsWith("/api/payments")) {
+                if (method.equals("GET") && (path.equals("/api/payments") || path.equals("/api/payments/"))) return false; // Users cannot get all payments
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     private Mono<Void> onError(ServerWebExchange exchange, String message, HttpStatus status) {
