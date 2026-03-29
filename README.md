@@ -147,6 +147,23 @@ Authorization: Bearer <your-jwt-token>
 
 ---
 
+## 🛡️ Role-Based Access Control (RBAC) & Security
+
+The system uses a strict RBAC policy enforced primarily at the **API Gateway** level, with fine-grained ownership validation at the microservice level.
+
+### ROLE_ADMIN
+- Has **full access** to all endpoints across all microservices. 
+- Can create, update, and delete any resource (Rooms, Customers, Bookings).
+
+### ROLE_USER
+- **Room Service**: Restricted to READ-ONLY access (can view rooms, but cannot create or modify them).
+- **Customer Service**: Can only CREATE, READ, and UPDATE **their own customer profile**. The system parses the user's `email` from the JWT token and verifies ownership. If a user attempts to fetch or modify another customer's ID, they receive a `403 Forbidden`.
+- **Booking & Payment Service**: Can only view or create their own bookings/payments.
+
+*Note: Swagger UI has been configured to automatically process your JWT Token globally. The internal security headers (`X-Auth-Role` and `X-Auth-Email`) are completely hidden from the UI but are actively populated by the API Gateway to enforce security.*
+
+---
+
 ## 🔗 API Endpoints (via Gateway :8086)
 
 ### Auth Service
