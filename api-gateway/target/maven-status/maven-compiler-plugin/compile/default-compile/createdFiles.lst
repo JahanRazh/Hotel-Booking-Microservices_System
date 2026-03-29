@@ -1,0 +1,7 @@
+com\hotel\gateway\config\JwtUtil.class
+com\hotel\gateway\config\RouteValidator.class
+com\hotel\gateway\filter\AuthenticationFilter$Config.class
+com\hotel\gateway\filter\AuthenticationFilter.class
+com\hotel\gateway\config\FallbackController.class
+com\hotel\gateway\controller\SwaggerAggregatorController.class
+com\hotel\gateway\ApiGatewayApplication.class
