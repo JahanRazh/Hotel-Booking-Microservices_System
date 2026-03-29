@@ -21,14 +21,20 @@ public class CustomerController {
 
     @PostMapping
     @Operation(summary = "Create customer", description = "[ADMIN/USER] Register a new customer")
-    public ResponseEntity<CustomerDto.Response> createCustomer(@Valid @RequestBody CustomerDto.CreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(request));
+    public ResponseEntity<CustomerDto.Response> createCustomer(
+            @Valid @RequestBody CustomerDto.CreateRequest request,
+            @RequestHeader(value = "X-Auth-Role", defaultValue = "ROLE_SYSTEM") String role,
+            @RequestHeader(value = "X-Auth-Email", defaultValue = "") String email) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerService.createCustomer(request, role, email));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get customer by ID", description = "[ADMIN/USER]")
-    public ResponseEntity<CustomerDto.Response> getCustomer(@PathVariable Long id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
+    public ResponseEntity<CustomerDto.Response> getCustomer(
+            @PathVariable Long id,
+            @RequestHeader(value = "X-Auth-Role", defaultValue = "ROLE_SYSTEM") String role,
+            @RequestHeader(value = "X-Auth-Email", defaultValue = "") String email) {
+        return ResponseEntity.ok(customerService.getCustomerById(id, role, email));
     }
 
     @GetMapping
@@ -41,8 +47,10 @@ public class CustomerController {
     @Operation(summary = "Update customer", description = "[ADMIN/USER] Update existing customer details")
     public ResponseEntity<CustomerDto.Response> updateCustomer(
             @PathVariable Long id,
-            @RequestBody CustomerDto.UpdateRequest request) {
-        return ResponseEntity.ok(customerService.updateCustomer(id, request));
+            @RequestBody CustomerDto.UpdateRequest request,
+            @RequestHeader(value = "X-Auth-Role", defaultValue = "ROLE_SYSTEM") String role,
+            @RequestHeader(value = "X-Auth-Email", defaultValue = "") String email) {
+        return ResponseEntity.ok(customerService.updateCustomer(id, request, role, email));
     }
 
     @DeleteMapping("/{id}")
@@ -52,9 +60,12 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping("/email/{emailPath}")
     @Operation(summary = "Get customer by email", description = "[ADMIN/USER]")
-    public ResponseEntity<CustomerDto.Response> getCustomerByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(customerService.getCustomerByEmail(email));
+    public ResponseEntity<CustomerDto.Response> getCustomerByEmail(
+            @PathVariable("emailPath") String emailPath,
+            @RequestHeader(value = "X-Auth-Role", defaultValue = "ROLE_SYSTEM") String role,
+            @RequestHeader(value = "X-Auth-Email", defaultValue = "") String authEmail) {
+        return ResponseEntity.ok(customerService.getCustomerByEmail(emailPath, role, authEmail));
     }
 }

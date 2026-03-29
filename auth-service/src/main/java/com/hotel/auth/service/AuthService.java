@@ -41,7 +41,7 @@ public class AuthService {
         userRepository.save(user);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        String token = jwtUtil.generateToken(userDetails, user.getRole().name());
+        String token = jwtUtil.generateToken(userDetails, user.getRole().name(), user.getEmail());
 
         return new AuthDto.AuthResponse(token, user.getUsername(), user.getEmail(), user.getRole().name(), "Registration successful");
     }
@@ -55,7 +55,7 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-        String token = jwtUtil.generateToken(userDetails, user.getRole().name());
+        String token = jwtUtil.generateToken(userDetails, user.getRole().name(), user.getEmail());
 
         return new AuthDto.AuthResponse(token, user.getUsername(), user.getEmail(), user.getRole().name(), "Login successful");
     }

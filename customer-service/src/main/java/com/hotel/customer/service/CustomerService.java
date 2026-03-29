@@ -15,7 +15,10 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public CustomerDto.Response createCustomer(CustomerDto.CreateRequest request) {
+    public CustomerDto.Response createCustomer(CustomerDto.CreateRequest request, String role, String authEmail) {
+        if ("ROLE_USER".equals(role) && !request.getEmail().equals(authEmail)) {
+            throw new RuntimeException("Forbidden: You can only create a profile for your own email address");
+        }
         if (customerRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Customer with this email already exists");
         }
@@ -35,9 +38,10 @@ public class CustomerService {
         return toResponse(customerRepository.save(customer));
     }
 
-    public CustomerDto.Response getCustomerById(Long id) {
+    public CustomerDto.Response getCustomerById(Long id, String role, String authEmail) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+        validateOwnership(customer, role, authEmail);
         return toResponse(customer);
     }
 
@@ -47,9 +51,11 @@ public class CustomerService {
                 .collect(Collectors.toList());
     }
 
-    public CustomerDto.Response updateCustomer(Long id, CustomerDto.UpdateRequest request) {
+    public CustomerDto.Response updateCustomer(Long id, CustomerDto.UpdateRequest request, String role, String authEmail) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+        validateOwnership(customer, role, authEmail);
+        
         if (request.getFirstName() != null) customer.setFirstName(request.getFirstName());
         if (request.getLastName() != null) customer.setLastName(request.getLastName());
         if (request.getPhone() != null) customer.setPhone(request.getPhone());
@@ -66,10 +72,17 @@ public class CustomerService {
         customerRepository.delete(customer);
     }
 
-    public CustomerDto.Response getCustomerByEmail(String email) {
+    public CustomerDto.Response getCustomerByEmail(String email, String role, String authEmail) {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Customer not found with email: " + email));
+        validateOwnership(customer, role, authEmail);
         return toResponse(customer);
+    }
+
+    private void validateOwnership(Customer customer, String role, String authEmail) {
+        if ("ROLE_USER".equals(role) && !customer.getEmail().equals(authEmail)) {
+            throw new RuntimeException("Forbidden: You can only access or modify your own profile");
+        }
     }
 
     private CustomerDto.Response toResponse(Customer c) {

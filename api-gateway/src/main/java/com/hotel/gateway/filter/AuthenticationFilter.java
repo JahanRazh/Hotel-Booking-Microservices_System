@@ -47,6 +47,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     // Forward user info to downstream services as headers
                     String username = jwtUtil.extractUsername(token);
                     String role = jwtUtil.extractRole(token);
+                    String email = jwtUtil.extractEmail(token);
 
                     // Role-Based Access Control
                     if (role == null || !isAuthorized(request.getURI().getPath(), request.getMethod().name(), role)) {
@@ -56,6 +57,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
                             .header("X-Auth-User", username)
                             .header("X-Auth-Role", role)
+                            .header("X-Auth-Email", email != null ? email : "")
                             .build();
 
                     return chain.filter(exchange.mutate().request(modifiedRequest).build());
