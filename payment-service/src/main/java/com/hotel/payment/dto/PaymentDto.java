@@ -25,6 +25,13 @@ public class PaymentDto {
     }
 
     @Data
+    public static class UpdateRequest {
+        private PaymentMethod paymentMethod;
+        private PaymentStatus status;
+        private String failureReason;
+    }
+
+    @Data
     @lombok.AllArgsConstructor
     @lombok.NoArgsConstructor
     @lombok.Builder

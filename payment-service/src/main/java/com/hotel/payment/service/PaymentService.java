@@ -92,6 +92,23 @@ public class PaymentService {
         return toResponse(paymentRepository.save(payment));
     }
 
+    public PaymentDto.Response updatePayment(Long id, PaymentDto.UpdateRequest request) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+
+        if (request.getPaymentMethod() != null) payment.setPaymentMethod(request.getPaymentMethod());
+        if (request.getStatus() != null) payment.setStatus(request.getStatus());
+        if (request.getFailureReason() != null) payment.setFailureReason(request.getFailureReason());
+
+        return toResponse(paymentRepository.save(payment));
+    }
+
+    public void deletePayment(Long id) {
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+        paymentRepository.delete(payment);
+    }
+
     // Simulates a payment gateway: always succeeds for demo
     private boolean simulatePaymentGateway(String method) {
         return true;
