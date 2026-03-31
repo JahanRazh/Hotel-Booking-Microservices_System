@@ -97,6 +97,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
             
             // Payment Service
             if (path.startsWith("/api/payments")) {
+                if (method.equals("DELETE") || method.equals("PUT")) return false; // Users cannot delete or update payments
                 if (method.equals("GET") && (path.equals("/api/payments") || path.equals("/api/payments/"))) return false; // Users cannot get all payments
                 return true;
             }

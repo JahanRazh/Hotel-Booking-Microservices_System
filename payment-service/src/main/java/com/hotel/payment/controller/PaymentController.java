@@ -62,4 +62,19 @@ public class PaymentController {
             @Valid @RequestBody PaymentDto.RefundRequest request) {
         return ResponseEntity.ok(paymentService.refundPayment(id, request));
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update payment", description = "[ADMIN ONLY] Update an existing payment")
+    public ResponseEntity<PaymentDto.Response> updatePayment(
+            @PathVariable Long id,
+            @RequestBody PaymentDto.UpdateRequest request) {
+        return ResponseEntity.ok(paymentService.updatePayment(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete payment", description = "[ADMIN ONLY] Delete a payment record")
+    public ResponseEntity<Void> deletePayment(@PathVariable Long id) {
+        paymentService.deletePayment(id);
+        return ResponseEntity.noContent().build();
+    }
 }
