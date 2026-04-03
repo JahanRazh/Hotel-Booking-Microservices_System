@@ -3,10 +3,10 @@ Slide 1 – Title
 
 ## Group Members
 
-*   *[Add Group Member 1]*
-*   *[Add Group Member 2]*
-*   *[Add Group Member 3]*
-*   *[Add Group Member 4]*
+*   *Jayalath J.P.R.J	IT22591098*
+*   *Jeesara K.G.N	IT22561084*
+*   *Tharaka B.W.P	IT22600516*
+*   *Reshmi M.G.G.K	IT22600448*
 
 ---
 Slide 2 – Introduction
