@@ -232,23 +232,83 @@ Payment Service ──REST──▶ Booking Service  (fetch booking amount)
 ## 📁 Project Folder Structure
 
 ```
-hotel-management/
+Hotel-Booking-Microservices_System/
 ├── api-gateway/
-│   └── src/main/java/com/hotel/gateway/
-│       ├── ApiGatewayApplication.java
-│       ├── config/
-│       │   ├── JwtUtil.java
-│       │   ├── RouteValidator.java
-│       │   └── FallbackController.java
-│       └── filter/
-│           └── AuthenticationFilter.java
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/hotel/gateway/
+│       │   ├── ApiGatewayApplication.java
+│       │   ├── config/
+│       │   ├── controller/
+│       │   └── filter/
+│       └── resources/application.yml
 ├── auth-service/
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/hotel/auth/
+│       │   ├── AuthServiceApplication.java
+│       │   ├── config/
+│       │   ├── controller/
+│       │   ├── dto/
+│       │   ├── model/
+│       │   ├── repository/
+│       │   ├── security/
+│       │   └── service/
+│       └── resources/application.properties
 ├── customer-service/
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/hotel/customer/
+│       │   ├── CustomerServiceApplication.java
+│       │   ├── config/
+│       │   ├── controller/
+│       │   ├── dto/
+│       │   ├── model/
+│       │   ├── repository/
+│       │   └── service/
+│       └── resources/application.properties
 ├── room-service/
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/hotel/room/
+│       │   ├── RoomServiceApplication.java
+│       │   ├── config/
+│       │   ├── controller/
+│       │   ├── dto/
+│       │   ├── model/
+│       │   ├── repository/
+│       │   └── service/
+│       └── resources/application.properties
 ├── booking-service/
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/hotel/booking/
+│       │   ├── BookingServiceApplication.java
+│       │   ├── client/
+│       │   ├── config/
+│       │   ├── controller/
+│       │   ├── dto/
+│       │   ├── model/
+│       │   ├── repository/
+│       │   └── service/
+│       └── resources/application.properties
 ├── payment-service/
-├── start-all.sh
-└── README.md
+│   ├── pom.xml
+│   └── src/main/
+│       ├── java/com/hotel/payment/
+│       │   ├── PaymentServiceApplication.java
+│       │   ├── client/
+│       │   ├── config/
+│       │   ├── controller/
+│       │   ├── dto/
+│       │   ├── model/
+│       │   ├── repository/
+│       │   └── service/
+│       └── resources/application.properties
+├── LICENSE
+├── Project_Details.md
+├── README.md
+└── start-all.sh
 ```
 
 ---
